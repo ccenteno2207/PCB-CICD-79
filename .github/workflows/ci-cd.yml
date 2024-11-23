@@ -1,0 +1,42 @@
+```yaml
+# .github/workflows/ci-cd.yml
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Chequear el código
+        uses: actions/checkout@v2
+
+      - name: Configurar JDK y Gradle
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          gradle-version: '8.3'
+
+      - name: Construir el proyecto
+        run: ./gradlew build --no-daemon
+
+      - name: Autenticarse en ECR
+        run: |
+          aws ecr get-login-password --region YOUR_AWS_REGION | docker login --username AWS --password-stdin YOUR_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com
+
+      - name: Construir la imagen Docker
+        run: |
+          docker build -t YOUR_IMAGE_NAME .
+
+      - name: Etiquetar la imagen
+        run: |
+          docker tag YOUR_IMAGE_NAME:latest YOUR_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/YOUR_IMAGE_NAME:latest
+
+      - name: Empujar la imagen a ECR
+        run: |
+          docker push YOUR_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/YOUR_IMAGE_NAME:latest
