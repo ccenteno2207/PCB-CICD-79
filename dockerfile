@@ -1,22 +1,36 @@
-# Base minimalista con Java 17
-FROM openjdk:17-alpine
+# Etapa base
+FROM openjdk:17-alpine as base
 
-# Instalar Gradle 8.3
-ENV GRADLE_VERSION=8.3
-RUN apk add --no-cache curl bash && \
-    curl -sLo gradle.zip https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
-    unzip gradle.zip -d /opt/ && \
-    rm gradle.zip && \
-    ln -s /opt/gradle-${GRADLE_VERSION}/bin/gradle /usr/bin/gradle
-
-# Verifica las versiones instaladas
-RUN java -version && gradle -v
-
-# Configuración de directorios de trabajo
+# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos del proyecto
-COPY . .
+# Instalar Gradle
+RUN apk add --no-cache \
+    curl \
+    unzip && \
+    GRADLE_VERSION=3.8 && \
+    curl -Lo gradle.zip https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip gradle.zip -d /opt/ && \
+    ln -s /opt/gradle-${GRADLE_VERSION}/bin/gradle /usr/bin/gradle && \
+    rm gradle.zip
 
-# Comando predeterminado
-CMD ["gradle", "--version"]
+# Copiar archivos necesarios
+#COPY plugins.json /opt/plugins.json
+
+# Instalar otras herramientas necesarias
+RUN apk add --no-cache \
+    jq \
+    curl \
+    terraform \
+    tflint \
+    terragrunt \
+    tfsec
+
+# Configuración adicional
+ENV PATH="/opt/gradle/bin:${PATH}"
+
+# Segunda etapa, si es necesario
+# Aquí puedes añadir otras configuraciones o herramientas si fuera necesario
+
+# Por defecto, cuando se ejecuta la imagen, Java estará disponible
+ENTRYPOINT ["java", "-version"]
