@@ -52,8 +52,21 @@ jobs:
           push: true
           tags: ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}}
 # Step para verificar la versión de Maven
-      - name: Check Maven version
-        run: mvn -version
+    #   - name: Check Maven version
+    #     run: mvn -version
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Scan Docker Image
+        run: trivy image java17-gradle8.3-fixed      
 
       # # 5. Login en Azure Container Registry (ACR)
       # - name: Login to Azure Container Registry
