@@ -24,10 +24,12 @@ RUN apk update && apk upgrade && apk add --no-cache \
 RUN curl -fsSL "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -o gradle.zip \
     && unzip gradle.zip -d /opt/ \
     && rm gradle.zip \
-    && ln -s "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
+    && mv "/opt/gradle-${GRADLE_VERSION}" "${GRADLE_HOME}"
 
 # Verificación de las versiones instaladas
-RUN java -version && gradle --version
+RUN echo "Validando versiones instaladas..." \
+    && java -version \
+    && ${GRADLE_HOME}/bin/gradle --version
 
 # Creación de un usuario no root por seguridad
 RUN addgroup -S gradle && adduser -S gradle -G gradle \
