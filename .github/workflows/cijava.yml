@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Imagen Docker - Vulnerabilidades
 
 on:
   push:
@@ -47,4 +47,4 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
       - name: Scan Docker Image
-        run: trivy image java17-gradle8.3-fixed      
+        run: trivy image ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}} 
