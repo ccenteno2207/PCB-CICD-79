@@ -12,12 +12,11 @@ ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 ENV TZ=America/Lima
 
 # Actualización del sistema e instalación de dependencias necesarias
-RUN && apk update && apk upgrade && apk add --no-cache \
-        bash \
-        curl \
-        unzip \
-        tzdata \
-    #    openjdk-17 \
+RUN apk update && apk upgrade && apk add --no-cache \
+    bash \
+    curl \
+    unzip \
+    tzdata \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
 
@@ -35,10 +34,6 @@ RUN echo "Validando versiones instaladas..." \
 # Creación de un usuario no root por seguridad
 RUN addgroup -S gradle && adduser -S gradle -G gradle \
     && mkdir -p /home/gradle/project && chown -R gradle:gradle /home/gradle
-
-# # Instalación de librerías Java con Gradle
-# COPY build.gradle /home/gradle/project/
-# RUN gradle build --no-daemon
 
 USER gradle
 WORKDIR /home/gradle/project
