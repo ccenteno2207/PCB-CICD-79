@@ -12,13 +12,15 @@ ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 ENV TZ=America/Lima
 
 # Actualización del sistema e instalación de dependencias necesarias
-RUN apk update && apk upgrade --no-cache \
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main" > /etc/apk/repositories \
+    && echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community" >> /etc/apk/repositories \
+    && apk update && apk upgrade --no-cache \
     && apk add --no-cache \
         bash \
         curl \
         unzip \
         tzdata \
-        openjdk-17-jdk-headless \
+        openjdk-17 \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
 
