@@ -14,8 +14,7 @@ ENV TZ=America/Lima
 # Actualización del sistema e instalación de dependencias necesarias
 RUN echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/main" > /etc/apk/repositories \
     && echo "https://dl-cdn.alpinelinux.org/alpine/latest-stable/community" >> /etc/apk/repositories \
-    && apk update && apk upgrade --no-cache \
-    && apk add --no-cache \
+    && apk update && apk upgrade && apk add --no-cache \
         bash \
         curl \
         unzip \
