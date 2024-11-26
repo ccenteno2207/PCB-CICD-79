@@ -1,0 +1,42 @@
+// build.gradle
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.example'
+version = '1.0.0'
+
+// Repositorios
+repositories {
+    mavenCentral()
+}
+
+// Dependencias
+dependencies {
+    implementation 'com.google.guava:guava:32.0.0-android'
+    implementation 'com.h2database:h2:2.2.220'
+    implementation 'commons-io:commons-io:2.14.0'
+    implementation 'org.apache.commons:commons-compress:1.26.0'
+    implementation 'org.apache.ivy:ivy:2.5.2'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.78'
+    implementation 'org.eclipse.jgit:org.eclipse.jgit:6.6.1.202309021850-r'
+    implementation 'software.amazon.ion:ion-java:1.10.5'
+}
+
+// Configuración de Java
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+// Tareas de Gradle
+application {
+    mainClass = 'com.example.App'
+}
+
+// Establecer tarea por defecto (ejemplo)
+task runApp(type: JavaExec) {
+    main = 'com.example.App'
+    classpath = sourceSets.main.runtimeClasspath
+}
+

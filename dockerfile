@@ -17,7 +17,6 @@ RUN apk update && apk upgrade && apk add --no-cache \
     curl \
     unzip \
     tzdata \
-    libgcc \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
 
