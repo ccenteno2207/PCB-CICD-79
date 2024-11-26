@@ -17,7 +17,7 @@ RUN && apk update && apk upgrade && apk add --no-cache \
         curl \
         unzip \
         tzdata \
-        openjdk-17 \
+    #    openjdk-17 \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
 
@@ -36,9 +36,9 @@ RUN echo "Validando versiones instaladas..." \
 RUN addgroup -S gradle && adduser -S gradle -G gradle \
     && mkdir -p /home/gradle/project && chown -R gradle:gradle /home/gradle
 
-# Instalación de librerías Java con Gradle
-COPY build.gradle /home/gradle/project/
-RUN gradle build --no-daemon
+# # Instalación de librerías Java con Gradle
+# COPY build.gradle /home/gradle/project/
+# RUN gradle build --no-daemon
 
 USER gradle
 WORKDIR /home/gradle/project
