@@ -13,12 +13,12 @@ ENV TZ=America/Lima
 
 # Actualización del sistema e instalación de dependencias necesarias
 RUN apk update && apk upgrade && apk add --no-cache \
-    bash \
-    curl \
+    bash=5.2.26-r0 \
+    curl=8.11.0-r2 \
     unzip=6.0-r14 \
-    ca-certificates-cacert \
-    ca-certificates \
-    tzdata \
+    ca-certificates-cacert=20240705-r0 \
+    ca-certificates=20240705-r0 \
+    tzdata=2024b-r0 \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
 

@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Imagen Docker - Vulnerabilidades
 
 on:
@@ -48,3 +40,23 @@ jobs:
 
       - name: Scan Docker Image
         run: trivy image ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}} 
+    
+      # Clair scan
+      - name: Install Clair Scanner
+        run: |
+          curl -sSL https://github.com/arminc/clair-scanner/releases/download/v12/clair-scanner_linux_amd64 -o /usr/local/bin/clair-scanner
+          chmod +x /usr/local/bin/clair-scanner
+
+      - name: Scan Docker Image with Clair
+        run: |
+          clair-scanner -r clair-report.json ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}}
+
+      # Snyk scan
+      - name: Set up Snyk
+        uses: snyk/actions/setup@v2.2.0
+        with:
+          token: ${{secrets.SNYK_TOKEN }}
+
+      - name: Scan Docker Image with Snyk
+        run: snyk container test ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}}
+  
