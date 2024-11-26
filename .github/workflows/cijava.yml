@@ -27,7 +27,7 @@ jobs:
           tags: ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}}
 
 
-  security-scan:
+  security-scan-Trivy:
     runs-on: ubuntu-latest
     needs: [containerization]
     steps:
@@ -51,12 +51,21 @@ jobs:
         run: |
           clair-scanner -r clair-report.json ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}}
 
-      # Snyk scan
-      - name: Set up Snyk
-        uses: snyk/actions/setup@v2.3.3
-        with:
-          token: ${{secrets.SNYK_TOKEN }}
+  security_snyk:
+    runs-on: ubuntu-latest
+    needs: [security-scan-Trivy]
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/gradle-jdk17@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Scan Docker Image with Snyk
-        run: snyk container test ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}}
+    # #   # Snyk scan
+    # #   - name: Set up Snyk
+    # #     uses: snyk/actions/setup@v2.3.3
+    # #     with:
+    # #       token: ${{secrets.SNYK_TOKEN }}
+    # #   - name: Scan Docker Image with Snyk
+    # #     run: snyk container test ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_REPOSITORI}}:${{github.sha}} 
   
