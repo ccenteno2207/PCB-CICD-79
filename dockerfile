@@ -12,11 +12,13 @@ ENV PATH="${GRADLE_HOME}/bin:${PATH}"
 ENV TZ=America/Lima
 
 # Actualización del sistema e instalación de dependencias necesarias
-RUN apk update && apk upgrade && apk add --no-cache \
+RUN apk update && apk upgrade --no-cache \
+    && apk add --no-cache \
     bash \
     curl \
     unzip \
     tzdata \
+    openjdk-17-jdk-headless \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
 
