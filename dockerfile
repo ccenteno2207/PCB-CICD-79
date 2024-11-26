@@ -15,7 +15,9 @@ ENV TZ=America/Lima
 RUN apk update && apk upgrade && apk add --no-cache \
     bash \
     curl \
-    unzip \
+    unzip=6.0-r14 \
+    ca-certificates-cacert \
+    ca-certificates \
     tzdata \
     && cp /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo "$TZ" > /etc/timezone
