@@ -53,7 +53,7 @@ jobs:
 
       # Snyk scan
       - name: Set up Snyk
-        uses: snyk/actions/setup@v2.0.3
+        uses: snyk/actions/setup@v2.3.3
         with:
           token: ${{secrets.SNYK_TOKEN }}
 
